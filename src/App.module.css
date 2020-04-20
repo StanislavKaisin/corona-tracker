@@ -2,9 +2,27 @@ body{
   background-color: rgb(250, 250, 250);
 }
 
+:root {
+  --infected: rgba(255, 136, 0, 0.5);
+  --deaths: rgba(255, 0, 0, 0.5);
+  --recovered: rgba(0, 255, 0, 0.5);
+}
+
 .container{
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
+.image{
+  width: 300px;
+  margin-top: 50px;
+}
+
+@media(max-width: 770px){
+  .container{
+    margin: 0 10%;
+
+  }
+}
+

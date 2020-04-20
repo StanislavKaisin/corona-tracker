@@ -1,0 +1,5 @@
+export const confirmedColor = 'rgba(255, 136, 0, 0.5)'
+export const confirmedHexColor = '#ff8800'
+export const deathsColor = 'rgba(255, 0, 0, 0.5)'
+export const deathsHexColor = '#ff0000'
+export const recoveredColor = 'rgba(0, 255, 0, 0.5)'
