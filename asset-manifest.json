@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.b2bdb14c.chunk.css",
-    "main.js": "/static/js/main.8bdb281b.chunk.js",
-    "main.js.map": "/static/js/main.8bdb281b.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.0074d33a.js",
-    "runtime-main.js.map": "/static/js/runtime-main.0074d33a.js.map",
-    "static/js/2.e36d83e4.chunk.js": "/static/js/2.e36d83e4.chunk.js",
-    "static/js/2.e36d83e4.chunk.js.map": "/static/js/2.e36d83e4.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.02657b53c553f8c86758541febf1c854.js": "/precache-manifest.02657b53c553f8c86758541febf1c854.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.b2bdb14c.chunk.css.map": "/static/css/main.b2bdb14c.chunk.css.map",
-    "static/js/2.e36d83e4.chunk.js.LICENSE.txt": "/static/js/2.e36d83e4.chunk.js.LICENSE.txt",
-    "static/media/corona_header.png": "/static/media/corona_header.d7265326.png"
+    "main.css": "/corona-tracker/static/css/main.b2bdb14c.chunk.css",
+    "main.js": "/corona-tracker/static/js/main.8bdb281b.chunk.js",
+    "main.js.map": "/corona-tracker/static/js/main.8bdb281b.chunk.js.map",
+    "runtime-main.js": "/corona-tracker/static/js/runtime-main.a1feae45.js",
+    "runtime-main.js.map": "/corona-tracker/static/js/runtime-main.a1feae45.js.map",
+    "static/js/2.2dc186a5.chunk.js": "/corona-tracker/static/js/2.2dc186a5.chunk.js",
+    "static/js/2.2dc186a5.chunk.js.map": "/corona-tracker/static/js/2.2dc186a5.chunk.js.map",
+    "index.html": "/corona-tracker/index.html",
+    "precache-manifest.1edbc4398674a320de982d1eac872941.js": "/corona-tracker/precache-manifest.1edbc4398674a320de982d1eac872941.js",
+    "service-worker.js": "/corona-tracker/service-worker.js",
+    "static/css/main.b2bdb14c.chunk.css.map": "/corona-tracker/static/css/main.b2bdb14c.chunk.css.map",
+    "static/js/2.2dc186a5.chunk.js.LICENSE.txt": "/corona-tracker/static/js/2.2dc186a5.chunk.js.LICENSE.txt",
+    "static/media/corona_header.png": "/corona-tracker/static/media/corona_header.d7265326.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.0074d33a.js",
-    "static/js/2.e36d83e4.chunk.js",
+    "static/js/runtime-main.a1feae45.js",
+    "static/js/2.2dc186a5.chunk.js",
     "static/css/main.b2bdb14c.chunk.css",
     "static/js/main.8bdb281b.chunk.js"
   ]
