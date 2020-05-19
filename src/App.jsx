@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import coronaHeader from "./asserts/corona_header.png";
 
-import { Cards, Chart, CountryPicker } from "./components";
+import { Cards, Chart, CountryPicker, AnaliticPanel } from "./components";
 import styles from "./App.module.css";
 import { fetchData } from "./api/index.js";
 
@@ -32,6 +32,7 @@ class App extends Component {
           className={styles.image}
         />
         <Cards data={data} />
+        <AnaliticPanel />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Chart data={data} country={country} />
       </div>
