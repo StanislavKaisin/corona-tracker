@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { fetchDailyData } from "../../api/index";
 import { Line, Bar } from "react-chartjs-2";
 import styles from "./Chart.module.css";
-import {confirmedColor,confirmedHexColor, recoveredColor, deathsColor, deathsHexColor} from '../../asserts/colors';
+import {
+  confirmedColor,
+  confirmedHexColor,
+  recoveredColor,
+  deathsColor,
+  deathsHexColor,
+} from "../../asserts/colors";
 
 const Chart = ({ data: { confirmed, recovered, deaths }, country }) => {
   const [dailyData, setDailyData] = useState([]);
@@ -13,7 +19,7 @@ const Chart = ({ data: { confirmed, recovered, deaths }, country }) => {
     fetchAPI();
   }, []);
 
-  const lineChart = dailyData.length ? (
+  const lineChart = dailyData?.length ? (
     <Line
       data={{
         labels: dailyData.map(({ date }) => date),
@@ -44,11 +50,7 @@ const Chart = ({ data: { confirmed, recovered, deaths }, country }) => {
         datasets: [
           {
             label: "People",
-            backgroundColor: [
-              confirmedColor,
-              deathsColor,
-              recoveredColor,
-            ],
+            backgroundColor: [confirmedColor, deathsColor, recoveredColor],
             data: [confirmed.value, deaths.value, recovered.value],
           },
         ],

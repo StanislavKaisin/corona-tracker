@@ -6,6 +6,8 @@ import { Cards, Chart, CountryPicker, AnaliticPanel } from "./components";
 import styles from "./App.module.css";
 import { fetchData } from "./api/index.js";
 
+import confirmed from "./api/confirmed.json";
+
 class App extends Component {
   state = {
     data: {},
@@ -21,6 +23,7 @@ class App extends Component {
   };
 
   render() {
+    console.log("this.state=", this.state);
     const { data, country } = this.state;
     return (
       <div className={styles.container}>
@@ -32,7 +35,7 @@ class App extends Component {
           className={styles.image}
         />
         <Cards data={data} />
-        <AnaliticPanel />
+        <AnaliticPanel confirmed={confirmed} />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Chart data={data} country={country} />
       </div>
