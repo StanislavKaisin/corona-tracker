@@ -8,10 +8,13 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core/styles";
 
 import StatesTable from "../StatesTable/StatesTable";
+import { fetchDailyDataByDate } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    maxWidth: 820,
+    marginBottom: "1rem",
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -31,6 +34,7 @@ const G7 = [
 ];
 
 const ukraineNeighbours = [
+  "Ukraine",
   "Poland",
   "Slovakia",
   "Hungary",
@@ -51,15 +55,18 @@ export interface State {
 }
 
 interface AnaliticPanelProps {
-  confirmed: State[];
+  confirmed?: State[];
+  lastUpdate?: string;
 }
 
 type StatesObject = { [key: string]: State };
 
-const AnaliticPanel = ({ confirmed }: AnaliticPanelProps) => {
-  console.log("confirmed", confirmed);
+const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
+  // console.log("confirmed", confirmed);
 
   const classes = useStyles();
+
+  // const [confirmed, setConfirmed] = useState<(State | undefined)[]>([]);
 
   const [mostAffected, setMostAffected] = useState<State[]>([]);
   const [G7States, setG7States] = useState<(State | undefined)[]>([]);
@@ -68,85 +75,92 @@ const AnaliticPanel = ({ confirmed }: AnaliticPanelProps) => {
   >([]);
 
   useEffect(() => {
-    const confirmedToCountries = confirmed.reduce<StatesObject>(
-      (states, currentState) => {
-        if (!states.hasOwnProperty(currentState.countryRegion)) {
-          states[currentState.countryRegion] = {
-            countryRegion: currentState.countryRegion,
-            confirmed: currentState.confirmed,
-            deaths: currentState.deaths,
-            recovered: currentState.recovered,
-          };
-        }
-        states[currentState.countryRegion].confirmed =
-          +states[currentState.countryRegion].confirmed +
-          +currentState.confirmed;
-
-        states[currentState.countryRegion].deaths =
-          +states[currentState.countryRegion].deaths + +currentState.deaths;
-
-        states[currentState.countryRegion].recovered =
-          +states[currentState.countryRegion].recovered +
-          +currentState.recovered;
-
-        return states;
-      },
-      {}
-    );
-    // console.log("confirmedToCountries=", confirmedToCountries);
-    const mostAffected = (states: StatesObject) => {
-      // console.log("states=", states);
-      // console.log("typeof states=", typeof states);
-      const arrayOfStates = Object.values(states);
-      // console.log("arrayOfStates=", arrayOfStates);
-      arrayOfStates.sort(
-        (state1, state2) => +state2.confirmed - +state1.confirmed
-      );
-      // console.log("arrayOfStates=", arrayOfStates);
-      const mostAffected = [
-        arrayOfStates[0],
-        arrayOfStates[1],
-        arrayOfStates[2],
-        arrayOfStates[3],
-        arrayOfStates[4],
-        arrayOfStates[6],
-      ];
-      setMostAffected(mostAffected);
-    };
-    mostAffected(confirmedToCountries);
-
-    const G7States = (states: StatesObject) => {
-      const arrayOfStates = Object.values(states);
-      const G7Local = [...G7];
-      const G7LocalWithInfo = G7Local.map((G7State) => {
-        const findedState = arrayOfStates.find((state) => {
-          if (state.countryRegion === G7State) {
-            return state;
-          }
-        });
-        if (findedState) return findedState;
-      });
-      setG7States(G7LocalWithInfo);
-    };
-    G7States(confirmedToCountries);
-
-    const UkraineNeighbours = (states: StatesObject) => {
-      const arrayOfStates = Object.values(states);
-      const UkraineNeighboursLocalWithInfo = ukraineNeighbours.map(
-        (UkraineNeighbour) => {
-          const findedState = arrayOfStates.find((state) => {
-            if (state.countryRegion === UkraineNeighbour) {
-              // console.log("state=", state);
-              return state;
+    console.log("lastUpdate analiticPanel=", lastUpdate);
+    if (lastUpdate) {
+      fetchDailyDataByDate(lastUpdate).then((confirmed: State[]) => {
+        console.log("confirmed=", confirmed);
+        const confirmedToCountries =
+          confirmed &&
+          confirmed.reduce<StatesObject>((states, currentState) => {
+            if (!states.hasOwnProperty(currentState!.countryRegion)) {
+              states[currentState!.countryRegion] = {
+                countryRegion: currentState!.countryRegion,
+                confirmed: currentState!.confirmed,
+                deaths: currentState!.deaths,
+                recovered: currentState!.recovered,
+              };
             }
+            states[currentState!.countryRegion].confirmed =
+              +states[currentState!.countryRegion].confirmed +
+              +currentState!.confirmed;
+
+            states[currentState!.countryRegion].deaths =
+              +states[currentState!.countryRegion].deaths +
+              +currentState!.deaths;
+
+            states[currentState!.countryRegion].recovered =
+              +states[currentState!.countryRegion].recovered +
+              +currentState!.recovered;
+
+            return states;
+          }, {});
+        // console.log("confirmedToCountries=", confirmedToCountries);
+        const mostAffected = (states: StatesObject) => {
+          // console.log("states=", states);
+          // console.log("typeof states=", typeof states);
+          const arrayOfStates = Object.values(states);
+          // console.log("arrayOfStates=", arrayOfStates);
+          arrayOfStates.sort(
+            (state1, state2) => +state2.confirmed - +state1.confirmed
+          );
+          // console.log("arrayOfStates=", arrayOfStates);
+          const mostAffected = [
+            arrayOfStates[0],
+            arrayOfStates[1],
+            arrayOfStates[2],
+            arrayOfStates[3],
+            arrayOfStates[4],
+            arrayOfStates[6],
+            arrayOfStates[7],
+          ];
+          setMostAffected(mostAffected);
+        };
+        mostAffected(confirmedToCountries);
+
+        const G7States = (states: StatesObject) => {
+          const arrayOfStates = Object.values(states);
+          const G7Local = [...G7];
+          const G7LocalWithInfo = G7Local.map((G7State) => {
+            const findedState = arrayOfStates.find((state) => {
+              if (state.countryRegion === G7State) {
+                return state;
+              }
+            });
+            if (findedState) return findedState;
           });
-          return findedState;
-        }
-      );
-      setUkraineNeighbours(UkraineNeighboursLocalWithInfo);
-    };
-    UkraineNeighbours(confirmedToCountries);
-  }, []);
+          setG7States(G7LocalWithInfo);
+        };
+        G7States(confirmedToCountries);
+
+        const UkraineNeighbours = (states: StatesObject) => {
+          const arrayOfStates = Object.values(states);
+          const UkraineNeighboursLocalWithInfo = ukraineNeighbours.map(
+            (UkraineNeighbour) => {
+              const findedState = arrayOfStates.find((state) => {
+                if (state.countryRegion === UkraineNeighbour) {
+                  // console.log("state=", state);
+                  return state;
+                }
+              });
+              return findedState;
+            }
+          );
+          setUkraineNeighbours(UkraineNeighboursLocalWithInfo);
+        };
+        UkraineNeighbours(confirmedToCountries);
+      });
+    }
+  }, [lastUpdate]);
 
   return (
     <div className={classes.root}>
@@ -185,7 +199,7 @@ const AnaliticPanel = ({ confirmed }: AnaliticPanelProps) => {
           id="panel2a-header"
         >
           <Typography className={classes.heading}>
-            Ukraine`s Neighbour
+            Ukraine&Neighbours
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>

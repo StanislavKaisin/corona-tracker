@@ -1,12 +1,11 @@
 import React, { Component } from "react";
+import Typography from "@material-ui/core/Typography";
 
 import coronaHeader from "./asserts/corona_header.png";
 
 import { Cards, Chart, CountryPicker, AnaliticPanel } from "./components";
 import styles from "./App.module.css";
 import { fetchData } from "./api/index.js";
-
-import confirmed from "./api/confirmed.json";
 
 class App extends Component {
   state = {
@@ -23,8 +22,11 @@ class App extends Component {
   };
 
   render() {
-    console.log("this.state=", this.state);
+    // console.log("this.state=", this.state);
     const { data, country } = this.state;
+    const lastUpdate = this.state.data?.lastUpdate;
+    console.log("lastUpdate=", lastUpdate);
+    console.log("typeof lastUpdate=", typeof lastUpdate);
     return (
       <div className={styles.container}>
         <img
@@ -35,7 +37,21 @@ class App extends Component {
           className={styles.image}
         />
         <Cards data={data} />
-        <AnaliticPanel confirmed={confirmed} />
+        <AnaliticPanel lastUpdate={lastUpdate} />
+        <Typography
+          variant="caption"
+          color="textSecondary"
+          styles={{ marginBottom: "2rem" }}
+        >
+          Data by{" "}
+          <a
+            href="https://github.com/mathdroid/covid-19-api"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            https://github.com/mathdroid/covid-19-api
+          </a>
+        </Typography>
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Chart data={data} country={country} />
       </div>
