@@ -12,9 +12,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { State } from "../AnaliticPanel/AnaliticPanel";
+
 import CountUp from "react-countup";
 import { Typography } from "@material-ui/core";
+import { State } from "../../interfaces/State";
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({

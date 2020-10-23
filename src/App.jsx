@@ -22,11 +22,8 @@ class App extends Component {
   };
 
   render() {
-    // console.log("this.state=", this.state);
     const { data, country } = this.state;
     const lastUpdate = this.state.data?.lastUpdate;
-    console.log("lastUpdate=", lastUpdate);
-    console.log("typeof lastUpdate=", typeof lastUpdate);
     return (
       <div className={styles.container}>
         <img

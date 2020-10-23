@@ -9,6 +9,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import StatesTable from "../StatesTable/StatesTable";
 import { fetchDailyDataByDate } from "../../api";
+import { State } from "../../interfaces/State";
+import { getG7StatesInfo } from "./helpers/getG7StatesInfo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,17 +24,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const G7 = [
-  "US",
-  "Japan",
-  "Germany",
-  "France",
-  "United Kingdom",
-  "Italy",
-  "Canada",
-  "China",
-];
-
 const ukraineNeighbours = [
   "Ukraine",
   "Poland",
@@ -45,15 +36,6 @@ const ukraineNeighbours = [
   "Russia",
 ];
 
-// console.log(confirmed);
-
-export interface State {
-  countryRegion: string;
-  confirmed: number | string;
-  deaths: number | string;
-  recovered: number | string;
-}
-
 interface AnaliticPanelProps {
   confirmed?: State[];
   lastUpdate?: string;
@@ -62,12 +44,7 @@ interface AnaliticPanelProps {
 type StatesObject = { [key: string]: State };
 
 const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
-  // console.log("confirmed", confirmed);
-
   const classes = useStyles();
-
-  // const [confirmed, setConfirmed] = useState<(State | undefined)[]>([]);
-
   const [mostAffected, setMostAffected] = useState<State[]>([]);
   const [G7States, setG7States] = useState<(State | undefined)[]>([]);
   const [UkraineNeighbours, setUkraineNeighbours] = useState<
@@ -75,10 +52,8 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
   >([]);
 
   useEffect(() => {
-    console.log("lastUpdate analiticPanel=", lastUpdate);
     if (lastUpdate) {
       fetchDailyDataByDate(lastUpdate).then((confirmed: State[]) => {
-        console.log("confirmed=", confirmed);
         const confirmedToCountries =
           confirmed &&
           confirmed.reduce<StatesObject>((states, currentState) => {
@@ -104,16 +79,11 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
 
             return states;
           }, {});
-        // console.log("confirmedToCountries=", confirmedToCountries);
         const mostAffected = (states: StatesObject) => {
-          // console.log("states=", states);
-          // console.log("typeof states=", typeof states);
           const arrayOfStates = Object.values(states);
-          // console.log("arrayOfStates=", arrayOfStates);
           arrayOfStates.sort(
             (state1, state2) => +state2.confirmed - +state1.confirmed
           );
-          // console.log("arrayOfStates=", arrayOfStates);
           const mostAffected = [
             arrayOfStates[0],
             arrayOfStates[1],
@@ -127,20 +97,8 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
         };
         mostAffected(confirmedToCountries);
 
-        const G7States = (states: StatesObject) => {
-          const arrayOfStates = Object.values(states);
-          const G7Local = [...G7];
-          const G7LocalWithInfo = G7Local.map((G7State) => {
-            const findedState = arrayOfStates.find((state) => {
-              if (state.countryRegion === G7State) {
-                return state;
-              }
-            });
-            if (findedState) return findedState;
-          });
-          setG7States(G7LocalWithInfo);
-        };
-        G7States(confirmedToCountries);
+        const G7StatesInfo = getG7StatesInfo(confirmedToCountries);
+        setG7States(G7StatesInfo);
 
         const UkraineNeighbours = (states: StatesObject) => {
           const arrayOfStates = Object.values(states);
@@ -148,7 +106,6 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
             (UkraineNeighbour) => {
               const findedState = arrayOfStates.find((state) => {
                 if (state.countryRegion === UkraineNeighbour) {
-                  // console.log("state=", state);
                   return state;
                 }
               });
@@ -173,7 +130,6 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
           <Typography className={classes.heading}>Most affected</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {/* <Typography>{JSON.stringify(mostAffected, null, 2)}</Typography> */}
           <StatesTable states={mostAffected} />
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -187,7 +143,6 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
           <Typography className={classes.heading}>G7 Countries</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {/* <Typography>{JSON.stringify(G7States, null, 2)}</Typography> */}
           <StatesTable states={G7States} />
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -203,7 +158,6 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {/* <Typography>{JSON.stringify(UkraineNeighbours, null, 2)}</Typography> */}
           <StatesTable states={UkraineNeighbours} />
         </ExpansionPanelDetails>
       </ExpansionPanel>
