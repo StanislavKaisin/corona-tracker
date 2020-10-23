@@ -11,6 +11,7 @@ import StatesTable from "../StatesTable/StatesTable";
 import { fetchDailyDataByDate } from "../../api";
 import { State } from "../../interfaces/State";
 import { getG7StatesInfo } from "./helpers/getG7StatesInfo";
+import { getUkraineNeighbours } from "./helpers/getUkraineNeighbours";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,18 +24,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
   },
 }));
-
-const ukraineNeighbours = [
-  "Ukraine",
-  "Poland",
-  "Slovakia",
-  "Hungary",
-  "Romania",
-  "Turkey",
-  "Moldova",
-  "Belarus",
-  "Russia",
-];
 
 interface AnaliticPanelProps {
   confirmed?: State[];
@@ -100,21 +89,10 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
         const G7StatesInfo = getG7StatesInfo(confirmedToCountries);
         setG7States(G7StatesInfo);
 
-        const UkraineNeighbours = (states: StatesObject) => {
-          const arrayOfStates = Object.values(states);
-          const UkraineNeighboursLocalWithInfo = ukraineNeighbours.map(
-            (UkraineNeighbour) => {
-              const findedState = arrayOfStates.find((state) => {
-                if (state.countryRegion === UkraineNeighbour) {
-                  return state;
-                }
-              });
-              return findedState;
-            }
-          );
-          setUkraineNeighbours(UkraineNeighboursLocalWithInfo);
-        };
-        UkraineNeighbours(confirmedToCountries);
+        const UkraineNeighboursInfo = getUkraineNeighbours(
+          confirmedToCountries
+        );
+        setUkraineNeighbours(UkraineNeighboursInfo);
       });
     }
   }, [lastUpdate]);
