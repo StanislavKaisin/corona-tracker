@@ -12,6 +12,8 @@ import { fetchDailyDataByDate } from "../../api";
 import { State } from "../../interfaces/State";
 import { getG7StatesInfo } from "./helpers/getG7StatesInfo";
 import { getUkraineNeighbours } from "./helpers/getUkraineNeighbours";
+import { getMostAffected } from "./helpers/getMostAffected";
+import { getConfirmedToCountries } from "./helpers/getConfirmedToCountries";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,8 +32,6 @@ interface AnaliticPanelProps {
   lastUpdate?: string;
 }
 
-type StatesObject = { [key: string]: State };
-
 const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
   const classes = useStyles();
   const [mostAffected, setMostAffected] = useState<State[]>([]);
@@ -43,48 +43,11 @@ const AnaliticPanel = ({ lastUpdate }: AnaliticPanelProps) => {
   useEffect(() => {
     if (lastUpdate) {
       fetchDailyDataByDate(lastUpdate).then((confirmed: State[]) => {
-        const confirmedToCountries =
-          confirmed &&
-          confirmed.reduce<StatesObject>((states, currentState) => {
-            if (!states.hasOwnProperty(currentState!.countryRegion)) {
-              states[currentState!.countryRegion] = {
-                countryRegion: currentState!.countryRegion,
-                confirmed: currentState!.confirmed,
-                deaths: currentState!.deaths,
-                recovered: currentState!.recovered,
-              };
-            }
-            states[currentState!.countryRegion].confirmed =
-              +states[currentState!.countryRegion].confirmed +
-              +currentState!.confirmed;
+        //getConfirmedToCountries
+        const confirmedToCountries = getConfirmedToCountries(confirmed);
 
-            states[currentState!.countryRegion].deaths =
-              +states[currentState!.countryRegion].deaths +
-              +currentState!.deaths;
-
-            states[currentState!.countryRegion].recovered =
-              +states[currentState!.countryRegion].recovered +
-              +currentState!.recovered;
-
-            return states;
-          }, {});
-        const mostAffected = (states: StatesObject) => {
-          const arrayOfStates = Object.values(states);
-          arrayOfStates.sort(
-            (state1, state2) => +state2.confirmed - +state1.confirmed
-          );
-          const mostAffected = [
-            arrayOfStates[0],
-            arrayOfStates[1],
-            arrayOfStates[2],
-            arrayOfStates[3],
-            arrayOfStates[4],
-            arrayOfStates[6],
-            arrayOfStates[7],
-          ];
-          setMostAffected(mostAffected);
-        };
-        mostAffected(confirmedToCountries);
+        const mostAffectedInfo = getMostAffected(confirmedToCountries);
+        setMostAffected(mostAffectedInfo);
 
         const G7StatesInfo = getG7StatesInfo(confirmedToCountries);
         setG7States(G7StatesInfo);
